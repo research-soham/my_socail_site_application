@@ -1,0 +1,106 @@
+<div class="container">
+  <div class="row">
+    <div class="col-md-3"></div>
+    <div class="col-md-8", style="margin-top:3%; margin-bottom:3%; margin-left:3%; margin-right:3%" >
+      <% profile = @accounts.find_by(id: @post.account_id).profile %>
+      <p> <%= image_tag profile.profile_image, class: "img-thumbnail rounded-circle", style:"width:55px; height:55px" %>
+        <strong style="margin-bottom: 0; padding-bottom: 0;"><%= profile.user_name %></strong>
+        <small style="margin-left:2%; margin-right: 430px; padding-right: 100px;"><%= @post.location %></small> 
+      </p>
+      <div>
+        <% if @post.images.attached? %>
+          <% @post.images.each do |image| %>
+            <%= image_tag url_for(image), alt: image.filename.to_s, class: "img-thumbnail", style: "width:365px; height:265px; border: 2px solid black; border-radius:1.2rem" %>
+          <% end %>
+        <% else %>
+          <p>No images attached.</p>
+        <% end %><br>
+      </div>
+      <small style="margin-left:2%;" ><%= @post.description %></small>
+      <small>
+        <% @post.hashtag_ids.each do |hashtag_id| %>
+          <%= hashtag_id %>
+        <% end %>
+      </small><br>
+      <div class="row">
+        <ul class="list-unstyled d-flex flex-nowrap">
+          <% @all_likes = @post.likes %>
+          <% @likes = @all_likes.find_by(account_id: current_account.id) %>
+          <% if @likes.present? %>
+            <li class="mr-5">
+              <%= button_to like_path(@likes), method: :delete, class: "like-button", style: "display: inline-block; width: 25px; height: 25px; border: none; background: url('https://www.freeiconspng.com/thumbs/like-icon-png/black-like-icon-png-13.png') no-repeat center; background-size: cover;" do %>
+                <!-- Empty content, the image will be set as background -->
+              <% end %>
+            </li>
+          <% else %>
+            <li class="mr-5">
+              <%= form_for( @like, html: {class: "form"}) do |f| %>
+                <%= f.hidden_field :account_id, value: current_account.id %>
+                <%= f.hidden_field :likeable_id, value: @post.id %>
+                <%= f.hidden_field :likeable_type, value: "Post" %>
+                <%= button_tag type: "submit", class: "like-button", style: "display: inline-block; width: 25px; height: 25px; border: none; background: url('https://seeklogo.com/images/F/facebook-like-logo-32FAB6926D-seeklogo.com.png') no-repeat center; background-size: cover;" do %>
+                  <!-- Empty content, the image will be set as background -->
+                <% end %>
+              <% end %>
+            </li>
+          <% end %>
+          <li style="margin-left:10px; margin-top:5px;">
+            <%= link_to like_path(@post.id) do %>
+              <%= @all_likes.count %> likes
+            <% end %>
+          </li>
+        </ul>
+      </div>
+      <div class="row">
+        <b>Comments </b>
+        <%= form_for( @comment, html: {class: "form"}) do |f| %>
+          <%= f.text_field :data %>
+          <%= f.hidden_field :account_id, value: current_account.id %>
+          <%= f.hidden_field :post_id, value: @post.id %>
+          <%= f.submit "Comment" %>
+        <% end %>
+      </div>
+      <div>
+        <% @post.comments.each do |comment|%>
+          <div class="row", style="margin-top:10px">
+            <div class="col-sm-4">
+              <p>
+                <%= comment.data %> <small style="font-size: 80%;"><%= time_ago_in_words(comment.created_at) %></small>
+                <ul class="list-unstyled d-flex flex-nowrap">
+                  <% @all_likes = comment.likes %>
+                  <% @likes = @all_likes.find_by(account_id: current_account.id) %>
+                  <% if @likes.present? %>
+                    <li class="mr-1">
+                      <%= button_to like_path(@likes), method: :delete, class: "like-button", style: "display: inline-block; width: 25px; height: 25px; border: none; background: url('https://www.freeiconspng.com/thumbs/like-icon-png/black-like-icon-png-13.png') no-repeat center; background-size: cover;" do %>
+                        <!-- Empty content, the image will be set as background -->
+                      <% end %>
+                    </li>
+                  <% else %>
+                    <li class="mr-1", style="float: left">
+                      <%= form_for( @like, html: {class: "form"}) do |f| %>
+                        <%= f.hidden_field :account_id, value: current_account.id %>
+                        <%= f.hidden_field :likeable_id, value: comment.id %>
+                        <%= f.hidden_field :likeable_type, value: "Comment" %>
+                        <%= button_tag type: "submit", class: "like-button", style: "display: inline-block; width: 25px; height: 25px; border: none; background: url('https://seeklogo.com/images/F/facebook-like-logo-32FAB6926D-seeklogo.com.png') no-repeat center; background-size: cover;" do %>
+                          <!-- Empty content, the image will be set as background -->
+                        <% end %>
+                      <% end %>
+                    </li>
+                  <% end %>
+                </ul>
+              </p>
+            </div> 
+            <div class="col-sm-3">
+              <% @profile = @profiles.find_by(account_id: comment.account_id) %>
+              <small>
+                <%= link_to @profile.user_name, profile_path(@profile.id) %>
+              </small>
+            </div>
+            <div class="col-sm-5"></div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+    <div class="col-md-1"></div>
+  </div>
+</div>

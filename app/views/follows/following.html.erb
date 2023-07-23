@@ -1,0 +1,41 @@
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="row">
+       <% @accounts.each do |account| %>
+          <% unless account.profile.id == current_account.profile.id %>
+            <div class="col-md-5", style="margin-top:3%; margin-bottom:3%; margin-left:3%; margin-right:3%" >
+              <div class="row">  
+                <div class="col-sm-3">
+                  <% if account.profile.profile_image.attached? %>
+                    <%= image_tag account.profile.profile_image, class: "img-thumbnail rounded-circle", style:"width:75px; height:75px" %>
+                  <% else %>
+                    <p>No image attached</p>
+                  <% end %>
+                </div>
+                <div class="col-sm-5">
+                  <div class="col-sm-5 mt-2">
+                    <%= link_to profile_path(account.profile) do%>
+                      <b><%= account.profile.user_name %></b>
+                    <% end %>
+                    <p ><%= account.profile.name %></p>
+                  </div>
+                </div>
+                <div class="col-sm-4">
+                  <div class="col-sm-5 mt-3">
+                    <div>
+                      <% follow = Follow.where(current_account_id: current_account.id, account_id: account.id).first %>
+                      <%= form_for(follow, url: follow_path(follow), method: :delete) do |form| %>
+                        <%= form.submit "Unfollow", class: "btn btn-danger" %>
+                      <% end %>                      
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          <% end %>
+       <% end %> 
+      </div>
+    </div>
+  </div>
+</div>

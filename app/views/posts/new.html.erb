@@ -1,0 +1,38 @@
+<div class="container">shadow
+  <div class="container -lg">
+    <h2 class="text-center">Create Post</h2>
+
+    <%= form_for( @post, html: {class: "form"}) do |f| %>
+
+      <div class="form-group">
+        <%= f.label :images %><br />
+        <%= f.file_field :images, class: "form-control" %><br />
+      </div>
+            
+      <%= f.hidden_field :account_id, value: current_account.id %>
+      <div class="form-group">
+        <%= f.label :description %><br />
+        <%= f.text_field :description, autofocus: true, autocomplete: "description", class: "form-control" %><br />
+      </div>
+
+      <div class="form-group">
+        <%= f.label :hashtag_ids %><br />
+        <%= f.fields_for :hashtag_ids do |hashtag_fields| %>
+          <%= hashtag_fields.text_field :hashtag_id, autocomplete: "hashtag_ids", class: "form-control" %><br>
+        <% end %>        
+        <br />
+      </div>
+
+      <div class="form-group">
+        <%= f.label :location %><br />
+        <%= f.text_field :location, autocomplete: "location", class: "form-control" %><br />
+      </div>
+
+      <div class="text-center"><br>
+        <div class="form-group">
+          <%= f.submit "Create", class: "btn btn-primary" %> <br /><br />
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

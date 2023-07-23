@@ -1,0 +1,19 @@
+<footer class="footer bg-dark">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12 text-center">
+        <div class="col-md-12">
+          <ul class="list-unstyled">
+          <% if account_signed_in? %>
+            <% if current_account.profile.present? %>
+              <li class="d-inline mr-5"><%= link_to "MyProfile", profile_path(current_account.profile.id), class: "footer-link" %></li>
+              <li class="d-inline mr-5"><%= link_to "Update Profile", edit_profile_path(current_account.profile.id), class: "footer-link" %></li>
+            <% end %>
+          <% end %>
+            <li class="d-inline mr-5"><a href="#">Setting</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
